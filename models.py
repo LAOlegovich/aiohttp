@@ -52,7 +52,7 @@ class Sticker(Base):
     description: Mapped[str] = mapped_column (String(300), nullable= False)
     create_at: Mapped[datetime.datetime] = mapped_column(DateTime,server_default= func.now(), server_onupdate= func.now())
     owner: Mapped[int] = mapped_column(sq.ForeignKey("app_user.id"), nullable= False)
-    user: Mapped["User"] = relationship(back_populates= "sticker")
+    user: Mapped["User"] = relationship(back_populates= "sticker", lazy= "joined")
 
     @property
     def dict(self):
@@ -60,7 +60,7 @@ class Sticker(Base):
             "id_st":self.id,
             "name_st":self.name,
             "description_st":self.description,
-            "owner_st": self.owner
+            "owner_st": self.user.dict
         }
 
 async def init_db():
